@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='ethiopian_date_converter',
-    version='0.1.0',
+    version='0.1.1',
     description="Ethiopian Date <==> Gregorian Date",
     long_description=readme + '\n\n' + history,
     author="Henock Tesfaye Diressie",

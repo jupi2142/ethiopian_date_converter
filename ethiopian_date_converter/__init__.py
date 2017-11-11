@@ -4,4 +4,4 @@ from ethiopian_date_converter import converter
 
 __author__ = """Henock Tesfaye Diressie"""
 __email__ = 'jupiter.jupiter1@gmail.com'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
