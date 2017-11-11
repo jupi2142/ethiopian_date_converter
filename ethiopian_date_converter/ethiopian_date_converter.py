@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import calendar
 from datetime import date
+from functools import wraps
 
 JD_EPOCH_OFFSET_AMETE_ALEM = -285019    # ዓ/ዓ
 JD_EPOCH_OFFSET_AMETE_MIHRET = 1723856  # ዓ/ም
@@ -11,6 +12,16 @@ era_to_offset = {
     "AM": JD_EPOCH_OFFSET_AMETE_MIHRET,
     "AA": JD_EPOCH_OFFSET_AMETE_ALEM,
 }
+
+
+def string_dates(function):
+    @wraps(function)
+    def inner(date, *args, **kwargs):
+        year, month, day = map(int, date.split('-'))
+        return "{:04d}-{:02d}-{:02d}".format(
+            *function(year, month, day, *args, **kwargs)
+        )
+    return inner
 
 
 def ethiopian_coptic_to_julian_day_number(year, month, day, era):
@@ -122,6 +133,7 @@ def julian_day_number_to_ethiopic(jdn, era=JD_EPOCH_OFFSET_AMETE_MIHRET):
     return year, month, day
 
 
+@string_dates
 def ethiopian_to_gregorian(year=1,
                            month=1,
                            day=1,
@@ -139,14 +151,15 @@ def ethiopian_to_gregorian(year=1,
     )
 
 
+@string_dates
 def gregorian_to_ethiopic(year=1, month=1, day=1):
     date(year=year, month=month, day=day)
     jdn = gregorian_to_julian_day_number(year, month, day)
     return julian_day_number_to_ethiopic(jdn, guessEra(jdn))
 
 
-def converter(year, month, day, era="AM", to='gregorian'):
+def converter(date, era="AM", to='gregorian'):
     if to == 'gregorian':
-        return ethiopian_to_gregorian(year, month, day, era=era_to_offset[era])
+        return ethiopian_to_gregorian(date, era=era_to_offset[era])
     elif to == 'ethiopian':
-        return gregorian_to_ethiopic(year, month, day)
+        return gregorian_to_ethiopic(date)
